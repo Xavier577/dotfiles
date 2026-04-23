@@ -103,15 +103,11 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Yarn binaries
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# Added by Antigravity
-export PATH="/Users/tsegen/.antigravity/antigravity/bin:$PATH"
-
-# Added by Antigravity
-export PATH="/Users/tsegen/.antigravity/antigravity/bin:$PATH"
-fpath=($fpath "/Users/tsegen/.zfunctions")
-
 
 # Go binaries
 export PATH="$HOME/go/bin:$PATH"
+
+# Local machine-specific overrides (not committed to dotfiles)
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

@@ -31,22 +31,39 @@ clone_if_missing() {
   fi
 }
 
-# ---------- 1. Symlink dotfiles ----------
-echo ""
-echo "🔗 Linking dotfiles..."
-backup_and_link "$DOTFILES/nvim"        "$HOME/.config/nvim"
-backup_and_link "$DOTFILES/zshrc"       "$HOME/.zshrc"
-backup_and_link "$DOTFILES/tmux.conf"   "$HOME/.tmux.conf"
-backup_and_link "$DOTFILES/gitconfig"   "$HOME/.gitconfig"
-
-# ---------- 2. Install Homebrew if missing ----------
+# ---------- 1. Install Homebrew if missing ----------
 if ! command -v brew >/dev/null 2>&1; then
   echo ""
   echo "🍺 Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# ---------- 3. Install CLI tools ----------
+# ---------- 2. Install oh-my-zsh ----------
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo ""
+  echo "🌀 Installing oh-my-zsh..."
+  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+  echo "  ✓ oh-my-zsh already installed"
+fi
+
+# ---------- 3. Install ultima zsh theme ----------
+ULTIMA="$HOME/.oh-my-zsh/themes/ultima.zsh-theme"
+if [ ! -f "$ULTIMA" ]; then
+  echo "  ⬇  ultima zsh theme"
+  curl -fsSL https://raw.githubusercontent.com/egorlem/ultima.zsh-theme/master/ultima.zsh-theme -o "$ULTIMA"
+else
+  echo "  ✓ ultima theme already installed"
+fi
+
+# ---------- 4. Symlink dotfiles ----------
+echo ""
+echo "🔗 Linking dotfiles..."
+backup_and_link "$DOTFILES/nvim"        "$HOME/.config/nvim"
+backup_and_link "$DOTFILES/zshrc"       "$HOME/.zshrc"
+backup_and_link "$DOTFILES/tmux.conf"   "$HOME/.tmux.conf"
+
+# ---------- 5. Install CLI tools ----------
 echo ""
 echo "📦 Installing CLI tools via Homebrew..."
 for pkg in neovim tmux ripgrep fd tree-sitter node go; do
@@ -57,6 +74,14 @@ for pkg in neovim tmux ripgrep fd tree-sitter node go; do
     brew install "$pkg" >/dev/null
   fi
 done
+
+# ---------- 6. Install iTerm2 (terminal emulator) ----------
+if ! brew list --cask iterm2 >/dev/null 2>&1 && [ ! -d "/Applications/iTerm.app" ] && [ ! -d "$HOME/Applications/iTerm.app" ]; then
+  echo "  ⬇  iterm2"
+  brew install --cask iterm2 >/dev/null
+else
+  echo "  ✓ iterm2"
+fi
 
 # ---------- 4. Install LSP servers ----------
 echo ""
