@@ -234,6 +234,25 @@ By default, the current line shows a faint blame note at the end:
 
 ---
 
+## ⏱ WakaTime (vim-wakatime)
+
+Tracks coding time per language/project/branch and reports to [wakatime.com](https://wakatime.com). Runs silently in the background — no UI, no keybinds.
+
+### First-time setup
+
+On your first launch after install, Neovim will prompt for your API key (find it at [wakatime.com/settings/api-key](https://wakatime.com/settings/api-key)). It's saved to `~/.wakatime.cfg` so you only enter it once.
+
+To change it later:
+```bash
+$EDITOR ~/.wakatime.cfg
+```
+
+### Verify it's working
+
+After coding for a few minutes, check your dashboard at [wakatime.com/dashboard](https://wakatime.com/dashboard) — language and project stats should appear.
+
+---
+
 ## 🩺 Troubleshooting
 
 | Issue | Fix |

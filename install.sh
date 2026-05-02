@@ -117,6 +117,7 @@ clone_if_missing https://github.com/nvim-telescope/telescope.nvim          "$PLU
 clone_if_missing https://github.com/nvim-lua/plenary.nvim                  "$PLUGIN_DIR/plenary.nvim"
 clone_if_missing https://github.com/tpope/vim-fugitive                     "$PLUGIN_DIR/vim-fugitive"
 clone_if_missing https://github.com/lewis6991/gitsigns.nvim                "$PLUGIN_DIR/gitsigns.nvim"
+clone_if_missing https://github.com/wakatime/vim-wakatime                  "$PLUGIN_DIR/vim-wakatime"
 
 # nvim-treesitter needs the `main` branch for Neovim 0.10+
 (cd "$PLUGIN_DIR/nvim-treesitter" && git fetch --quiet origin main && git checkout --quiet main >/dev/null 2>&1 || true)

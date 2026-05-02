@@ -65,6 +65,7 @@ See **[nvim/README.md](nvim/README.md)** for a full guide to keybinds, features,
 | `diffview.nvim` | Visual git diff browser |
 | `vim-fugitive` | Full git client inside Neovim |
 | `gitsigns.nvim` | Gutter signs + inline blame |
+| `vim-wakatime` | WakaTime time-tracking integration |
 | `telescope.nvim` | Fuzzy finder (files, grep, symbols) |
 | `nvim-treesitter` | Better syntax highlighting + parsing |
 | `render-markdown.nvim` | Inline markdown rendering |
