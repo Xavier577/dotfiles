@@ -16,6 +16,10 @@ Built-in Neovim LSP — no `nvim-lspconfig` needed. Servers attach automatically
 |---|---|---|
 | Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
 | TypeScript / JavaScript | `ts_ls` | `npm install -g typescript typescript-language-server` |
+| YAML | `yaml-language-server` | `npm install -g yaml-language-server` |
+| JSON | `vscode-json-language-server` | `npm install -g vscode-langservers-extracted` |
+
+YAML and JSON come with **SchemaStore** integration — meaning Kubernetes manifests, GitHub Actions workflows, `docker-compose.yml`, `package.json`, `tsconfig.json` etc. all get full intellisense automatically based on the file name.
 
 ### Keybinds
 

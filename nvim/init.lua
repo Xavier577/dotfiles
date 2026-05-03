@@ -63,6 +63,55 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- YAML LSP (with SchemaStore for k8s, github actions, docker-compose, etc.)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "yaml", "yml" },
+  callback = function()
+    vim.lsp.start({
+      name = "yamlls",
+      cmd = { "yaml-language-server", "--stdio" },
+      root_dir = vim.fs.root(0, { ".git" }) or vim.fn.getcwd(),
+      settings = {
+        yaml = {
+          schemaStore = {
+            enable = true,
+            url = "https://www.schemastore.org/api/json/catalog.json",
+          },
+          validate = true,
+          hover = true,
+          completion = true,
+        },
+      },
+    })
+  end,
+})
+
+-- JSON LSP (with SchemaStore for package.json, tsconfig.json, etc.)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "json", "jsonc" },
+  callback = function()
+    vim.lsp.start({
+      name = "jsonls",
+      cmd = { "vscode-json-language-server", "--stdio" },
+      root_dir = vim.fs.root(0, { ".git" }) or vim.fn.getcwd(),
+      init_options = {
+        provideFormatter = true,
+      },
+      settings = {
+        json = {
+          validate = { enable = true },
+          schemas = {
+            { fileMatch = { "package.json" },           url = "https://json.schemastore.org/package.json" },
+            { fileMatch = { "tsconfig*.json" },         url = "https://json.schemastore.org/tsconfig.json" },
+            { fileMatch = { ".eslintrc", ".eslintrc.json" }, url = "https://json.schemastore.org/eslintrc.json" },
+            { fileMatch = { ".prettierrc", ".prettierrc.json" }, url = "https://json.schemastore.org/prettierrc.json" },
+          },
+        },
+      },
+    })
+  end,
+})
+
 -- Treesitter: install parsers and enable highlighting
 require("nvim-treesitter").install({ "markdown", "markdown_inline", "go", "typescript", "tsx", "javascript" })
 

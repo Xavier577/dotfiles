@@ -103,6 +103,22 @@ else
   echo "  ✓ typescript-language-server"
 fi
 
+# yaml-language-server
+if ! command -v yaml-language-server >/dev/null 2>&1; then
+  echo "  ⬇  yaml-language-server"
+  npm install -g yaml-language-server >/dev/null
+else
+  echo "  ✓ yaml-language-server"
+fi
+
+# vscode-json-language-server (also includes html/css/eslint)
+if ! command -v vscode-json-language-server >/dev/null 2>&1; then
+  echo "  ⬇  vscode-langservers-extracted (json/html/css/eslint)"
+  npm install -g vscode-langservers-extracted >/dev/null
+else
+  echo "  ✓ vscode-langservers-extracted"
+fi
+
 # ---------- 5. Install Neovim plugins ----------
 echo ""
 echo "🔌 Installing Neovim plugins..."
