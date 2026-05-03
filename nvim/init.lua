@@ -10,6 +10,9 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 250
 vim.opt.termguicolors = true
 
+-- Save with <leader>s
+vim.keymap.set("n", "<leader>s", "<cmd>write<cr>", { desc = "Save file" })
+
 -- Diagnostics: show errors inline at the end of the line
 vim.diagnostic.config({
   virtual_text = {
