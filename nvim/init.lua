@@ -10,6 +10,22 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 250
 vim.opt.termguicolors = true
 
+-- Diagnostics: show errors inline at the end of the line
+vim.diagnostic.config({
+  virtual_text = {
+    prefix = "●",
+    spacing = 4,
+  },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    source = true,
+  },
+})
+
 -- LSP keymaps (set when a server attaches)
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
