@@ -35,7 +35,7 @@ YAML and JSON come with **SchemaStore** integration — meaning Kubernetes manif
 | `<leader>f` | Format buffer |
 | `[d` / `]d` | Previous / next diagnostic |
 | `<leader>d` | Show diagnostic in floating window |
-| `<C-x><C-o>` (insert mode) | Trigger omni-completion |
+| `<C-x><C-o>` (insert mode) | Trigger omni-completion (fallback, blink.cmp handles this automatically) |
 
 ### Verify LSP is working
 
@@ -75,13 +75,45 @@ Project-wide search for files, text, symbols, references, and more.
 
 Powers syntax highlighting and is required by `render-markdown`. Installed parsers: `markdown`, `markdown_inline`, `go`, `typescript`, `tsx`, `javascript`.
 
-**Requires the `tree-sitter` CLI** (`brew install tree-sitter`). Parsers compile on first launch (~30s).
+**Requires the `tree-sitter` CLI** (`brew install tree-sitter-cli`). Parsers compile on first launch (~30s).
 
 To add more parsers:
 
 ```vim
 :lua require("nvim-treesitter").install({ "rust", "python", "lua" })
 ```
+
+---
+
+## 💡 Completion (blink.cmp)
+
+Autocompletion powered by blink.cmp — shows suggestions from LSP, file paths, snippets, and buffer words as you type.
+
+### Keybinds (insert mode)
+
+| Key | Action |
+|---|---|
+| `C-space` | Open completion menu (or open docs if menu is already open) |
+| `C-n` / `C-p` | Next / previous item |
+| `C-y` | Accept selected completion |
+| `C-e` | Dismiss menu |
+| `C-k` | Toggle signature help |
+
+### Sources
+
+Completions are pulled from these sources (in priority order):
+
+1. **LSP** — symbols, functions, types from the language server
+2. **Path** — file path completions (triggered by typing `./` or `/`)
+3. **Snippets** — native `vim.snippet` expansions
+4. **Buffer** — words from the current buffer
+
+### Notes
+
+- Completions appear automatically as you type — no need to manually trigger
+- Documentation for the selected item auto-shows in a floating window
+- Uses a Rust-based fuzzy matcher for typo-resistant matching
+- LSP capabilities are automatically enhanced (auto-imports, resolve support, etc.)
 
 ---
 
@@ -216,8 +248,9 @@ By default, the current line shows a faint blame note at the end:
 ### Write some code
 1. `<leader>ff` find a file
 2. Edit, get `K` hover docs / `gd` to jump around
-3. `<leader>f` to format, `<leader>ca` for quick fixes
-4. `<leader>fg` to search across the project
+3. Completions appear as you type — `C-y` to accept, `C-n`/`C-p` to navigate
+4. `<leader>f` to format, `<leader>ca` for quick fixes
+5. `<leader>fg` to search across the project
 
 ### Review changes
 1. `<leader>gd` opens Diffview
