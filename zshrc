@@ -109,5 +109,11 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 # Go binaries
 export PATH="$HOME/go/bin:$PATH"
 
+# GNU Binutils
+export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+
 # Local machine-specific overrides (not committed to dotfiles)
-[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local" || true
+
+# opencode
+export PATH=/Users/tsegen/.opencode/bin:$PATH
