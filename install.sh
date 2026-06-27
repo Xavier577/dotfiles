@@ -66,7 +66,7 @@ backup_and_link "$DOTFILES/tmux.conf"   "$HOME/.tmux.conf"
 # ---------- 5. Install CLI tools ----------
 echo ""
 echo "📦 Installing CLI tools via Homebrew..."
-for pkg in neovim tmux ripgrep fd tree-sitter node go; do
+for pkg in neovim tmux ripgrep fd tree-sitter-cli node go; do
   if brew list "$pkg" >/dev/null 2>&1; then
     echo "  ✓ $pkg"
   else
