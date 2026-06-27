@@ -56,6 +56,11 @@ else
   echo "  ✓ ultima theme already installed"
 fi
 
+# ---------- 3b. Install zsh plugins ----------
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+clone_if_missing https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+clone_if_missing https://github.com/zsh-users/zsh-autosuggestions     "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+
 # ---------- 4. Symlink dotfiles ----------
 echo ""
 echo "🔗 Linking dotfiles..."
