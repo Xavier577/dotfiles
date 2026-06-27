@@ -113,7 +113,43 @@ Completions are pulled from these sources (in priority order):
 - Completions appear automatically as you type — no need to manually trigger
 - Documentation for the selected item auto-shows in a floating window
 - Uses a Rust-based fuzzy matcher for typo-resistant matching
-- LSP capabilities are automatically enhanced (auto-imports, resolve support, etc.)
+- **Auto-imports:** When you accept a completion for a symbol from another package/module, the import statement is added automatically at the top of the file (works in Go, TypeScript, and JavaScript)
+
+---
+
+## 🔧 Code Actions (`<leader>ca`)
+
+Code actions are context-aware quick fixes and refactors provided by the LSP. Place your cursor on the relevant code and press `<leader>ca` to see what's available.
+
+### Common actions by language
+
+**Go (gopls):**
+| Context | Actions offered |
+|---|---|
+| Unresolved symbol | Add import |
+| Unused import | Remove import |
+| Function call | Extract to variable, extract to function |
+| Error handling | Add `if err != nil` check |
+| Struct literal | Fill struct fields |
+| Missing interface methods | Generate method stubs |
+| Entire file | Organize imports (add missing, remove unused) |
+
+**TypeScript / JavaScript (ts_ls):**
+| Context | Actions offered |
+|---|---|
+| Unresolved symbol | Add import, add all missing imports |
+| Unused variable | Remove unused declaration |
+| Function/block | Extract to function, extract to constant |
+| Type error | Add type assertion, infer type |
+| Missing return | Add missing return statement |
+| Class | Generate constructor, implement interface |
+| Entire file | Organize imports, sort imports |
+
+### Tips
+
+- Code actions are **contextual** — you'll see different options depending on where your cursor is and what errors/warnings are present
+- If a diagnostic (error/warning) is shown, placing your cursor on it and pressing `<leader>ca` will show relevant fixes
+- Some actions apply to the entire file (like "organize imports") — these appear regardless of cursor position
 
 ---
 
