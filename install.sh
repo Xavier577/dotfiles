@@ -139,9 +139,13 @@ clone_if_missing https://github.com/nvim-lua/plenary.nvim                  "$PLU
 clone_if_missing https://github.com/tpope/vim-fugitive                     "$PLUGIN_DIR/vim-fugitive"
 clone_if_missing https://github.com/lewis6991/gitsigns.nvim                "$PLUGIN_DIR/gitsigns.nvim"
 clone_if_missing https://github.com/wakatime/vim-wakatime                  "$PLUGIN_DIR/vim-wakatime"
+clone_if_missing https://github.com/saghen/blink.cmp                       "$PLUGIN_DIR/blink.cmp"
 
 # nvim-treesitter needs the `main` branch for Neovim 0.10+
 (cd "$PLUGIN_DIR/nvim-treesitter" && git fetch --quiet origin main && git checkout --quiet main >/dev/null 2>&1 || true)
+
+# blink.cmp: pin to v1 stable tag for prebuilt fuzzy binary
+(cd "$PLUGIN_DIR/blink.cmp" && git fetch --quiet --tags && git checkout --quiet "$(git tag -l 'v1.*' | sort -V | tail -1)" >/dev/null 2>&1 || true)
 
 echo ""
 echo "✅ All done!"

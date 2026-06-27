@@ -29,6 +29,21 @@ vim.diagnostic.config({
   },
 })
 
+-- Completion: blink.cmp
+require("blink.cmp").setup({
+  keymap = { preset = "default" },
+  appearance = {
+    nerd_font_variant = "mono",
+  },
+  completion = {
+    documentation = { auto_show = true },
+  },
+  sources = {
+    default = { "lsp", "path", "snippets", "buffer" },
+  },
+  fuzzy = { implementation = "prefer_rust" },
+})
+
 -- LSP keymaps (set when a server attaches)
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
@@ -60,6 +75,7 @@ vim.api.nvim_create_autocmd("FileType", {
       name = "gopls",
       cmd = { "gopls" },
       root_dir = vim.fs.root(0, { "go.mod", "go.work", ".git" }),
+      capabilities = require("blink.cmp").get_lsp_capabilities(),
       settings = {
         gopls = {
           analyses = { unusedparams = true },
@@ -78,6 +94,7 @@ vim.api.nvim_create_autocmd("FileType", {
       name = "ts_ls",
       cmd = { "typescript-language-server", "--stdio" },
       root_dir = vim.fs.root(0, { "tsconfig.json", "jsconfig.json", "package.json", ".git" }),
+      capabilities = require("blink.cmp").get_lsp_capabilities(),
     })
   end,
 })
@@ -90,6 +107,7 @@ vim.api.nvim_create_autocmd("FileType", {
       name = "yamlls",
       cmd = { "yaml-language-server", "--stdio" },
       root_dir = vim.fs.root(0, { ".git" }) or vim.fn.getcwd(),
+      capabilities = require("blink.cmp").get_lsp_capabilities(),
       settings = {
         yaml = {
           schemaStore = {
@@ -113,6 +131,7 @@ vim.api.nvim_create_autocmd("FileType", {
       name = "jsonls",
       cmd = { "vscode-json-language-server", "--stdio" },
       root_dir = vim.fs.root(0, { ".git" }) or vim.fn.getcwd(),
+      capabilities = require("blink.cmp").get_lsp_capabilities(),
       init_options = {
         provideFormatter = true,
       },
