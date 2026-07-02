@@ -58,10 +58,11 @@ After install, open a new terminal and launch `nvim`. Treesitter parsers compile
 
 ## Neovim plugins
 
-See **[nvim/README.md](nvim/README.md)** for a full guide to keybinds, features, and workflows.
+See **[nvim/README.md](nvim/README.md)** for setup and prerequisites, and **[nvim/USAGE.md](nvim/USAGE.md)** for a full guide to keybinds, features, and workflows.
 
 | Plugin | Purpose |
 |---|---|
+| `oil.nvim` | File explorer as an editable buffer |
 | `diffview.nvim` | Visual git diff browser |
 | `vim-fugitive` | Full git client inside Neovim |
 | `gitsigns.nvim` | Gutter signs + inline blame |
@@ -69,7 +70,9 @@ See **[nvim/README.md](nvim/README.md)** for a full guide to keybinds, features,
 | `telescope.nvim` | Fuzzy finder (files, grep, symbols) |
 | `nvim-treesitter` | Better syntax highlighting + parsing |
 | `render-markdown.nvim` | Inline markdown rendering |
-| `nvim-web-devicons` | File icons |
+| `blink.cmp` | Autocompletion (LSP, paths, snippets) |
+| `toggleterm.nvim` | Toggleable persistent terminals |
+| `nvim-web-devicons` | File icons (requires Nerd Font) |
 
 ## Personal/local overrides
 

@@ -13,6 +13,52 @@ vim.opt.termguicolors = true
 -- Save with <leader>s
 vim.keymap.set("n", "<leader>s", "<cmd>write<cr>", { desc = "Save file" })
 
+-- Reload config
+vim.keymap.set("n", "<leader>R", "<cmd>source $MYVIMRC<cr>", { desc = "Reload nvim config" })
+
+-- Toggle zoom: maximize current split or restore previous layout
+local zoom_tab = nil
+
+vim.keymap.set("n", "<leader>z", function()
+  if zoom_tab then
+    vim.cmd("tab close")
+    zoom_tab = nil
+  else
+    if vim.fn.winnr("$") > 1 then
+      zoom_tab = true
+      vim.cmd("tab split")
+    end
+  end
+end, { desc = "Toggle zoom split" })
+
+-- Named tabs: :TabName <name> to label, :TabName (no arg) to clear
+vim.api.nvim_create_user_command("TabName", function(opts)
+  local name = opts.args ~= "" and opts.args or nil
+  vim.t.tab_name = name
+  vim.cmd("redrawtabline")
+end, { nargs = "?" })
+
+vim.o.tabline = "%!v:lua._custom_tabline()"
+
+function _G._custom_tabline()
+  local s = ""
+  for i = 1, vim.fn.tabpagenr("$") do
+    local hl = (i == vim.fn.tabpagenr()) and "%#TabLineSel#" or "%#TabLine#"
+    s = s .. hl .. " "
+    local name = vim.fn.gettabvar(i, "tab_name")
+    if name ~= "" then
+      s = s .. name
+    else
+      local bufnr = vim.fn.tabpagebuflist(i)[vim.fn.tabpagewinnr(i)]
+      local fname = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":t")
+      s = s .. (fname ~= "" and fname or "[No Name]")
+    end
+    s = s .. " "
+  end
+  s = s .. "%#TabLineFill#"
+  return s
+end
+
 -- Diagnostics: show errors inline at the end of the line
 vim.diagnostic.config({
   virtual_text = {
@@ -168,8 +214,31 @@ require("render-markdown").setup({
 
 vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<cr>", { desc = "Toggle markdown render" })
 
+-- Oil: file explorer as a buffer (replaces :Ex)
+require("oil").setup({
+  default_file_explorer = true,
+  view_options = {
+    show_hidden = true,
+  },
+})
+
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory (Oil)" })
+
 -- Telescope: fuzzy finder for files, text, symbols
 local builtin = require("telescope.builtin")
+local actions = require("telescope.actions")
+
+require("telescope").setup({
+  pickers = {
+    buffers = {
+      mappings = {
+        i = { ["<C-d>"] = actions.delete_buffer },
+        n = { ["<C-d>"] = actions.delete_buffer },
+      },
+    },
+  },
+})
+
 vim.keymap.set("n", "<leader>ff", builtin.find_files,  { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", builtin.live_grep,   { desc = "Live grep (project)" })
 vim.keymap.set("n", "<leader>fb", builtin.buffers,     { desc = "Open buffers" })
@@ -210,3 +279,32 @@ vim.keymap.set("n", "]c", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next hunk" })
 vim.keymap.set("n", "[c", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev hunk" })
 vim.keymap.set("n", "<leader>hp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview hunk" })
 vim.keymap.set("n", "<leader>hr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
+
+-- Toggleterm: toggleable terminal instances
+require("toggleterm").setup({
+  size = function(term)
+    if term.direction == "horizontal" then return 15
+    elseif term.direction == "vertical" then return vim.o.columns * 0.4
+    end
+  end,
+  open_mapping = false,
+  direction = "horizontal",
+  shade_terminals = true,
+  start_in_insert = true,
+  persist_size = true,
+  close_on_exit = true,
+})
+
+-- Terminal mode: escape back to normal mode
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Terminal: move to left split" })
+vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "Terminal: move to below split" })
+vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = "Terminal: move to above split" })
+vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "Terminal: move to right split" })
+
+-- Toggle terminals by number: <leader>tt, <leader>t2, <leader>t3, etc.
+vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle terminal #1" })
+vim.keymap.set("n", "<leader>t2", "<cmd>2ToggleTerm<cr>", { desc = "Toggle terminal #2" })
+vim.keymap.set("n", "<leader>t3", "<cmd>3ToggleTerm<cr>", { desc = "Toggle terminal #3" })
+vim.keymap.set("n", "<leader>t4", "<cmd>4ToggleTerm<cr>", { desc = "Toggle terminal #4" })
+vim.keymap.set("n", "<leader>ts", "<cmd>TermSelect<cr>", { desc = "Select terminal" })

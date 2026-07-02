@@ -1,337 +1,60 @@
-# Neovim Setup Guide
+# Neovim Configuration
 
-A minimal, plugin-light Neovim configuration for **Go** and **TypeScript/JavaScript** development with first-class git integration and markdown rendering.
+A minimal, plugin-light Neovim configuration for **Go** and **TypeScript/JavaScript** development with first-class git integration, markdown rendering, and a file explorer that feels like Vim.
 
 > **Leader key:** `Space`
 
 ---
 
-## 🧠 LSP (Language Server Protocol)
+## Plugins
 
-Built-in Neovim LSP — no `nvim-lspconfig` needed. Servers attach automatically when you open a `.go` or `.ts/.tsx/.js/.jsx` file.
-
-### Servers configured
-
-| Language | Server | Install command |
-|---|---|---|
-| Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
-| TypeScript / JavaScript | `ts_ls` | `npm install -g typescript typescript-language-server` |
-| YAML | `yaml-language-server` | `npm install -g yaml-language-server` |
-| JSON | `vscode-json-language-server` | `npm install -g vscode-langservers-extracted` |
-
-YAML and JSON come with **SchemaStore** integration — meaning Kubernetes manifests, GitHub Actions workflows, `docker-compose.yml`, `package.json`, `tsconfig.json` etc. all get full intellisense automatically based on the file name.
-
-### Keybinds
-
-| Key | Action |
+| Plugin | Purpose |
 |---|---|
-| `K` | Hover docs (function signature, types, doc comment) |
-| `gd` | Go to definition |
-| `gD` | Go to declaration |
-| `gi` | Go to implementation |
-| `gr` | Find references |
-| `<leader>rn` | Rename symbol |
-| `<leader>ca` | Code actions |
-| `<leader>f` | Format buffer |
-| `[d` / `]d` | Previous / next diagnostic |
-| `<leader>d` | Show diagnostic in floating window |
-| `<C-x><C-o>` (insert mode) | Trigger omni-completion (fallback, blink.cmp handles this automatically) |
+| `oil.nvim` | File explorer as an editable buffer |
+| `telescope.nvim` | Fuzzy finder (files, grep, symbols, buffers) |
+| `nvim-treesitter` | Syntax highlighting + parsing |
+| `blink.cmp` | Autocompletion (LSP, paths, snippets, buffer) |
+| `diffview.nvim` | Visual git diff browser |
+| `vim-fugitive` | Full git client inside Neovim |
+| `gitsigns.nvim` | Gutter signs + inline blame |
+| `render-markdown.nvim` | Inline markdown rendering |
+| `nvim-web-devicons` | File icons (requires a Nerd Font) |
+| `vim-wakatime` | Coding time tracking |
 
-### Verify LSP is working
+## Prerequisites
 
-```vim
-:checkhealth vim.lsp
-```
-
----
-
-## 🔭 Telescope — Fuzzy Finder
-
-Project-wide search for files, text, symbols, references, and more.
-
-**Required CLI tools:** `ripgrep`, `fd` (installed via `brew install ripgrep fd`)
-
-| Key | Action |
+| Tool | Install |
 |---|---|
-| `<leader>ff` | Find files |
-| `<leader>fg` | **Live grep** across the entire project |
-| `<leader>fb` | Switch between open buffers |
-| `<leader>fh` | Search Neovim help docs |
-| `<leader>fs` | LSP workspace symbols (functions, classes) |
-| `<leader>fr` | LSP references for symbol under cursor |
-| `<leader>fd` | All diagnostics across project |
+| Neovim 0.10+ | `brew install neovim` |
+| ripgrep | `brew install ripgrep` |
+| fd | `brew install fd` |
+| tree-sitter CLI | `brew install tree-sitter-cli` |
+| A [Nerd Font](https://www.nerdfonts.com/) | `brew install --cask font-jetbrains-mono-nerd-font` |
+| gopls | `go install golang.org/x/tools/gopls@latest` |
+| typescript-language-server | `npm install -g typescript typescript-language-server` |
+| yaml-language-server | `npm install -g yaml-language-server` |
+| vscode-json-language-server | `npm install -g vscode-langservers-extracted` |
+
+## Install
+
+Run from the dotfiles root:
 
-### Inside the Telescope window
-
-- Type to fuzzy-filter
-- `<C-j>` / `<C-k>` to navigate
-- `<CR>` to open
-- `<C-x>` horizontal split, `<C-v>` vertical split, `<C-t>` new tab
-- `<Esc>` to close
-
----
-
-## 🌳 Treesitter
-
-Powers syntax highlighting and is required by `render-markdown`. Installed parsers: `markdown`, `markdown_inline`, `go`, `typescript`, `tsx`, `javascript`.
-
-**Requires the `tree-sitter` CLI** (`brew install tree-sitter-cli`). Parsers compile on first launch (~30s).
-
-To add more parsers:
-
-```vim
-:lua require("nvim-treesitter").install({ "rust", "python", "lua" })
-```
-
----
-
-## 💡 Completion (blink.cmp)
-
-Autocompletion powered by blink.cmp — shows suggestions from LSP, file paths, snippets, and buffer words as you type.
-
-### Keybinds (insert mode)
-
-| Key | Action |
-|---|---|
-| `C-space` | Open completion menu (or open docs if menu is already open) |
-| `C-n` / `C-p` | Next / previous item |
-| `C-y` | Accept selected completion |
-| `C-e` | Dismiss menu |
-| `C-k` | Toggle signature help |
-
-### Sources
-
-Completions are pulled from these sources (in priority order):
-
-1. **LSP** — symbols, functions, types from the language server
-2. **Path** — file path completions (triggered by typing `./` or `/`)
-3. **Snippets** — native `vim.snippet` expansions
-4. **Buffer** — words from the current buffer
-
-### Notes
-
-- Completions appear automatically as you type — no need to manually trigger
-- Documentation for the selected item auto-shows in a floating window
-- Uses a Rust-based fuzzy matcher for typo-resistant matching
-- **Auto-imports:** When you accept a completion for a symbol from another package/module, the import statement is added automatically at the top of the file (works in Go, TypeScript, and JavaScript)
-
----
-
-## 🔧 Code Actions (`<leader>ca`)
-
-Code actions are context-aware quick fixes and refactors provided by the LSP. Place your cursor on the relevant code and press `<leader>ca` to see what's available.
-
-### Common actions by language
-
-**Go (gopls):**
-| Context | Actions offered |
-|---|---|
-| Unresolved symbol | Add import |
-| Unused import | Remove import |
-| Function call | Extract to variable, extract to function |
-| Error handling | Add `if err != nil` check |
-| Struct literal | Fill struct fields |
-| Missing interface methods | Generate method stubs |
-| Entire file | Organize imports (add missing, remove unused) |
-
-**TypeScript / JavaScript (ts_ls):**
-| Context | Actions offered |
-|---|---|
-| Unresolved symbol | Add import, add all missing imports |
-| Unused variable | Remove unused declaration |
-| Function/block | Extract to function, extract to constant |
-| Type error | Add type assertion, infer type |
-| Missing return | Add missing return statement |
-| Class | Generate constructor, implement interface |
-| Entire file | Organize imports, sort imports |
-
-### Tips
-
-- Code actions are **contextual** — you'll see different options depending on where your cursor is and what errors/warnings are present
-- If a diagnostic (error/warning) is shown, placing your cursor on it and pressing `<leader>ca` will show relevant fixes
-- Some actions apply to the entire file (like "organize imports") — these appear regardless of cursor position
-
----
-
-## 📝 Markdown Rendering
-
-Renders headings, code blocks, lists, tables, and checkboxes inline in the editor.
-
-**Default mode: OFF** (manual). Toggle on when you want to read, off when you want to edit.
-
-| Key | Action |
-|---|---|
-| `<leader>mt` | Toggle markdown rendering on/off |
-
-Or use commands directly: `:RenderMarkdown enable` / `:RenderMarkdown disable` / `:RenderMarkdown toggle`.
-
----
-
-## 🔀 Git: Diffview — Visual Diff Browser
-
-A side-by-side diff viewer with a file list panel. Best for **reviewing** changes.
-
-| Key | Action |
-|---|---|
-| `<leader>gd` | Open diff view (working tree vs HEAD) |
-| `<leader>gh` | File history for current file |
-| `<leader>gq` | Close diff view |
-
-### Inside the file list panel
-
-| Key | Action |
-|---|---|
-| `<CR>` / `o` | Open file's diff |
-| `j` / `k` | Move between files |
-| `s` | Stage / unstage file |
-| `S` | Stage all |
-| `U` | Unstage all |
-| `X` | Discard file changes (destructive) |
-| `<Tab>` | Next file |
-| `R` | Refresh |
-
-### Useful commands
-
-```vim
-:DiffviewOpen HEAD~3        " compare against 3 commits ago
-:DiffviewOpen main..feature " compare branches
-:DiffviewOpen --staged      " show staged changes only
-:DiffviewFileHistory        " browse all commits in repo
-```
-
----
-
-## 🔧 Git: Fugitive — Full Git Client
-
-Run any git command from inside Neovim. Best for **doing** things (commit, push, blame).
-
-| Key | Action |
-|---|---|
-| `<leader>gs` | Git status (interactive) |
-| `<leader>gc` | Git commit |
-| `<leader>gp` | Git push |
-| `<leader>gP` | Git pull |
-| `<leader>gb` | Git blame (side panel) |
-| `<leader>gl` | Git log (oneline) |
-
-Run any other git command with `:Git <anything>` (e.g., `:Git rebase -i HEAD~3`).
-
-### Inside `:Git` status window
-
-| Key | Action |
-|---|---|
-| `s` | Stage file under cursor |
-| `u` | Unstage |
-| `X` | Discard changes |
-| `=` | Toggle inline diff for file |
-| `cc` | Commit |
-| `ca` | Commit `--amend` |
-| `cw` | Reword last commit |
-| `dd` | Open diff in split |
-
-**Pro tip:** Press `=` to expand the diff inline, then **visually select lines** and press `s` to stage just those lines (partial-file staging).
-
-### Inside `:Git blame`
-
-| Key | Action |
-|---|---|
-| `<CR>` | Show full diff for that commit |
-| `o` | Open commit in horizontal split |
-| `~` | Reblame at parent commit |
-| `q` | Close blame |
-
----
-
-## ✍️ Git: Gitsigns — Gutter Signs + Inline Blame
-
-Real-time gutter signs (`+` `~` `-`) for uncommitted changes, plus per-line blame.
-
-| Key | Action |
-|---|---|
-| `]c` / `[c` | Next / previous git hunk |
-| `<leader>hp` | Preview hunk diff in popup |
-| `<leader>hr` | Reset (discard) the current hunk |
-| `<leader>tb` | Toggle inline blame for **current line** |
-| `<leader>tB` | Open **full-file blame panel** |
-
-By default, the current line shows a faint blame note at the end:
-```
-    fmt.Println("hi")          Tsegen, 3 days ago · Add greeting
-```
-
----
-
-## 🗂 Built-in File Browser (Netrw)
-
-| Command | Action |
-|---|---|
-| `:Ex` / `:Explore` | Open file browser |
-| `:Vex` | Open in vertical split |
-| `:Lex` | Open as left sidebar |
-
-### Inside netrw
-
-- `<CR>` open file/dir
-- `-` go up one directory
-- `%` create new file
-- `d` create directory
-- `D` delete · `R` rename · `q` quit
-
----
-
-## 🎯 Cheat Sheet by Workflow
-
-### Write some code
-1. `<leader>ff` find a file
-2. Edit, get `K` hover docs / `gd` to jump around
-3. Completions appear as you type — `C-y` to accept, `C-n`/`C-p` to navigate
-4. `<leader>f` to format, `<leader>ca` for quick fixes
-5. `<leader>fg` to search across the project
-
-### Review changes
-1. `<leader>gd` opens Diffview
-2. Browse the file list, navigate hunks with `]c` / `[c`
-3. Use `<leader>hp` to preview, `<leader>hr` to discard
-
-### Commit and push
-1. `<leader>gs` opens Fugitive status
-2. Press `s` on each file to stage (or `=` then visually select lines)
-3. `cc` to commit (or `<leader>gc`)
-4. Type message, `:wq`
-5. `<leader>gp` to push
-
-### Find who broke this line
-1. Cursor on the suspect line
-2. `<leader>tb` for inline blame, or
-3. `<leader>gb` for full blame panel — press `<CR>` on a commit to see the full diff
-
----
-
-## ⏱ WakaTime (vim-wakatime)
-
-Tracks coding time per language/project/branch and reports to [wakatime.com](https://wakatime.com). Runs silently in the background — no UI, no keybinds.
-
-### First-time setup
-
-On your first launch after install, Neovim will prompt for your API key (find it at [wakatime.com/settings/api-key](https://wakatime.com/settings/api-key)). It's saved to `~/.wakatime.cfg` so you only enter it once.
-
-To change it later:
 ```bash
-$EDITOR ~/.wakatime.cfg
+./install.sh
 ```
 
-### Verify it's working
+This clones all plugins to `~/.local/share/nvim/site/pack/plugins/start/`. Treesitter parsers compile on first launch (~30s).
 
-After coding for a few minutes, check your dashboard at [wakatime.com/dashboard](https://wakatime.com/dashboard) — language and project stats should appear.
+## Documentation
 
----
+See **[USAGE.md](USAGE.md)** for a full guide to keybinds, features, and workflows.
 
-## 🩺 Troubleshooting
+## Troubleshooting
 
 | Issue | Fix |
 |---|---|
-| "Spawning language server failed" | Make sure `gopls` / `typescript-language-server` are on `$PATH` |
-| `~/go/bin/gopls` not found | Ensure `export PATH="$HOME/go/bin:$PATH"` is in your shell rc |
+| Icons show as `?` boxes | Set your terminal font to a Nerd Font |
+| "Spawning language server failed" | Ensure the server binary is on `$PATH` |
+| `~/go/bin/gopls` not found | Add `export PATH="$HOME/go/bin:$PATH"` to your shell rc |
 | Treesitter `range` errors | Run `:lua require("nvim-treesitter").install({...})` for missing parsers |
-| `:LspInfo` not found | Use `:checkhealth vim.lsp` instead (we use built-in LSP, not nvim-lspconfig) |
-| Markdown not rendering | Press `<leader>mt` to enable (it's off by default) |
+| Markdown not rendering | Press `<leader>mt` to enable (off by default) |
