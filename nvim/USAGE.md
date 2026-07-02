@@ -76,6 +76,7 @@ Toggleable terminal instances that persist in the background. Each terminal keep
 | `<leader>t2` | Toggle terminal #2 |
 | `<leader>t3` | Toggle terminal #3 |
 | `<leader>t4` | Toggle terminal #4 |
+| `<leader>tw` | Spin up a new terminal (next available number) |
 | `<leader>ts` | Select terminal from a list |
 | `<Esc>` (in terminal) | Exit terminal mode (back to normal mode) |
 
@@ -378,8 +379,9 @@ Useful for non-git directories, monorepos where you want to target a subdirector
 2. `<leader>tt` — toggle it away (server keeps running)
 3. `<leader>t2` — open terminal #2, run your backend
 4. `<leader>t2` — toggle it away
-5. `<leader>t3` — open terminal #3 for ad-hoc commands
-6. Toggle any of them back at any time with their keybind
+5. `<leader>tw` — need another terminal? spin up a new one on the fly
+6. `<leader>ts` — select from all open terminals by list
+7. Toggle any of them back at any time with their keybind
 
 ## Workflow: Focus on One Split
 
