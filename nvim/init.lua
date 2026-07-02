@@ -332,3 +332,10 @@ vim.keymap.set("n", "<leader>t2", "<cmd>2ToggleTerm<cr>", { desc = "Toggle termi
 vim.keymap.set("n", "<leader>t3", "<cmd>3ToggleTerm<cr>", { desc = "Toggle terminal #3" })
 vim.keymap.set("n", "<leader>t4", "<cmd>4ToggleTerm<cr>", { desc = "Toggle terminal #4" })
 vim.keymap.set("n", "<leader>ts", "<cmd>TermSelect<cr>", { desc = "Select terminal" })
+
+-- Spin up a new terminal (next available number)
+local _next_term_id = 4
+vim.keymap.set("n", "<leader>tw", function()
+  _next_term_id = _next_term_id + 1
+  vim.cmd(_next_term_id .. "ToggleTerm")
+end, { desc = "New terminal" })
