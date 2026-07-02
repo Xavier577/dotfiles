@@ -130,6 +130,7 @@ echo "🔌 Installing Neovim plugins..."
 PLUGIN_DIR="$HOME/.local/share/nvim/site/pack/plugins/start"
 mkdir -p "$PLUGIN_DIR"
 
+clone_if_missing https://github.com/stevearc/oil.nvim                      "$PLUGIN_DIR/oil.nvim"
 clone_if_missing https://github.com/sindrets/diffview.nvim                 "$PLUGIN_DIR/diffview.nvim"
 clone_if_missing https://github.com/MeanderingProgrammer/render-markdown.nvim "$PLUGIN_DIR/render-markdown.nvim"
 clone_if_missing https://github.com/nvim-treesitter/nvim-treesitter        "$PLUGIN_DIR/nvim-treesitter"
@@ -140,6 +141,7 @@ clone_if_missing https://github.com/tpope/vim-fugitive                     "$PLU
 clone_if_missing https://github.com/lewis6991/gitsigns.nvim                "$PLUGIN_DIR/gitsigns.nvim"
 clone_if_missing https://github.com/wakatime/vim-wakatime                  "$PLUGIN_DIR/vim-wakatime"
 clone_if_missing https://github.com/saghen/blink.cmp                       "$PLUGIN_DIR/blink.cmp"
+clone_if_missing https://github.com/akinsho/toggleterm.nvim                "$PLUGIN_DIR/toggleterm.nvim"
 
 # nvim-treesitter needs the `main` branch for Neovim 0.10+
 (cd "$PLUGIN_DIR/nvim-treesitter" && git fetch --quiet origin main && git checkout --quiet main >/dev/null 2>&1 || true)
