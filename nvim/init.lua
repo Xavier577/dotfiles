@@ -319,6 +319,14 @@ require("toggleterm").setup({
   close_on_exit = true,
 })
 
+-- Patch: toggleterm TermSelect crashes on Neovim 0.12 when terminal name is nil
+local Terminal = require("toggleterm.terminal").Terminal
+local orig_display_name = Terminal._display_name
+Terminal._display_name = function(self)
+  if not self.name then return "Terminal #" .. self.id end
+  return orig_display_name(self)
+end
+
 -- Terminal mode: escape back to normal mode
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Terminal: move to left split" })
