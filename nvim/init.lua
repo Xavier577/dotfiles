@@ -10,6 +10,30 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 250
 vim.opt.termguicolors = true
 
+-- Auto-cd to git root when entering a buffer (works with Oil and regular files)
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if bufname == "" then return end
+
+    -- Extract real path from oil:// URIs
+    local path = bufname:match("^oil://(.+)") or bufname
+    -- Skip other URI schemes (fugitive://, diffview://, etc.)
+    if path ~= bufname and not bufname:match("^oil://") then return end
+    if bufname:match("^%w+://") and not bufname:match("^oil://") then return end
+
+    local root = vim.fs.root(path, ".git")
+    if root then
+      vim.cmd.cd(root)
+    end
+  end,
+})
+
+-- Manual cd: :Cd <path> (tab-completes directories)
+vim.api.nvim_create_user_command("Cd", function(opts)
+  vim.cmd.cd(opts.args)
+end, { nargs = 1, complete = "dir" })
+
 -- Save with <leader>s
 vim.keymap.set("n", "<leader>s", "<cmd>write<cr>", { desc = "Save file" })
 

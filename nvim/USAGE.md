@@ -321,6 +321,25 @@ Real-time gutter signs and per-line blame.
 | Key | Action |
 |---|---|
 | `<leader>s` | Save file |
+| `<leader>R` | Reload nvim config |
+
+---
+
+## Working Directory
+
+Neovim's working directory (`cwd`) determines where git commands (Diffview, Fugitive) and project-wide searches (Telescope grep) operate.
+
+### Auto-cd to git root
+
+When you open a file inside a git repo, `cwd` automatically changes to that repo's root. Diffview, Fugitive, and Telescope just work against the correct repo — no manual action needed.
+
+### Manual override
+
+| Command | Action |
+|---|---|
+| `:Cd ~/path/to/dir` | Change `cwd` to any directory (tab-completes) |
+
+Useful for non-git directories, monorepos where you want to target a subdirectory, or overriding the auto behavior.
 
 ---
 
